@@ -13,11 +13,11 @@ Memo by {{ .Memo.Username }} ({{ .Memo.CreatedAt }})
 
 <hr>
 {{ if .Older }}
-<a id="older" href="http://52.199.202.14/memo/{{ .Older.Id }}">&lt; older memo</a>
+<a id="older" href="http://localhost/memo/{{ .Older.Id }}">&lt; older memo</a>
 {{ end }}
 |
 {{ if .Newer }}
-<a id="newer" href="http://52.199.202.14/memo/{{ .Newer.Id }}">newer memo &gt;</a>
+<a id="newer" href="http://localhost/memo/{{ .Newer.Id }}">newer memo &gt;</a>
 {{ end }}
 
 <hr>

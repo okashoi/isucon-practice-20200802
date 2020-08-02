@@ -4,14 +4,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
 <title>Isucon3</title>
-<link rel="stylesheet" href="http://52.199.202.14/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://localhost/css/bootstrap.min.css">
 <style>
 body {
   padding-top: 60px;
 }
 </style>
-<link rel="stylesheet" href="http://52.199.202.14/css/bootstrap-responsive.min.css">
-<link rel="stylesheet" href="http://52.199.202.14/">
+<link rel="stylesheet" href="http://localhost/css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="http://localhost/">
 </head>
 <body>
 <div class="navbar navbar-fixed-top">
@@ -25,9 +25,9 @@ body {
 <a class="brand" href="/">Isucon3</a>
 <div class="nav-collapse">
 <ul class="nav">
-<li><a href="http://52.199.202.14/">Home</a></li>
+<li><a href="http://localhost/">Home</a></li>
 {{ if .User }}
-<li><a href="http://52.199.202.14/mypage">MyPage</a></li>
+<li><a href="http://localhost/mypage">MyPage</a></li>
 <li>
   <form action="/signout" method="post">
     <input type="hidden" name="sid" value="{{ get_token .Session }}">
@@ -35,7 +35,7 @@ body {
   </form>
 </li>
 {{ else }}
-<li><a href="http://52.199.202.14/signin">SignIn</a></li>
+<li><a href="http://localhost/signin">SignIn</a></li>
 {{ end }}
 </ul>
 </div> <!--/.nav-collapse -->

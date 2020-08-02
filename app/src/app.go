@@ -78,9 +78,6 @@ type View struct {
 var (
 	dbConnPool chan *sql.DB
 	fmap       = template.FuncMap{
-		"url_for": func(path string) string {
-			return "http://52.199.202.14" + path
-		},
 		"first_line": func(s string) string {
 			sl := strings.Split(s, "\n")
 			return sl[0]
