@@ -181,15 +181,11 @@ func getUser(w http.ResponseWriter, r *http.Request, dbConn *sql.DB, session *se
 	if userId == nil {
 		return nil
 	}
-	user := &User{}
-	rows, err := dbConn.Query("SELECT * FROM users WHERE id=?", userId)
-	if err != nil {
-		serverError(w, err)
-		return nil
-	}
-	if rows.Next() {
-		rows.Scan(&user.Id, &user.Username, &user.Password, &user.Salt, &user.LastAccess)
-		rows.Close()
+	userIdInt, _ := userId.(int)
+	usernameString, _ := session.Values["username"].(string)
+	user := &User{
+		Id:       userIdInt,
+		Username: usernameString,
 	}
 	if user != nil {
 		w.Header().Add("Cache-Control", "private")
@@ -378,6 +374,7 @@ func signinPostHandler(w http.ResponseWriter, r *http.Request) {
 		h.Write([]byte(user.Salt + password))
 		if user.Password == fmt.Sprintf("%x", h.Sum(nil)) {
 			session.Values["user_id"] = user.Id
+			session.Values["username"] = user.Username
 			session.Values["token"] = fmt.Sprintf("%x", securecookie.GenerateRandomKey(32))
 			if err := session.Save(r, w); err != nil {
 				serverError(w, err)
