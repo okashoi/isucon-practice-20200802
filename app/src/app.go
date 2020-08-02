@@ -10,7 +10,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"runtime"
 	"strconv"
@@ -78,10 +77,9 @@ type View struct {
 
 var (
 	dbConnPool chan *sql.DB
-	baseUrl    *url.URL
 	fmap       = template.FuncMap{
 		"url_for": func(path string) string {
-			return baseUrl.String() + path
+			return "http://52.199.202.14" + path
 		},
 		"first_line": func(s string) string {
 			sl := strings.Split(s, "\n")
@@ -156,14 +154,6 @@ func loadConfig(filename string) *Config {
 		os.Exit(1)
 	}
 	return &config
-}
-
-func prepareHandler(w http.ResponseWriter, r *http.Request) {
-	if h := r.Header.Get("X-Forwarded-Host"); h != "" {
-		baseUrl, _ = url.Parse("http://" + h)
-	} else {
-		baseUrl, _ = url.Parse("http://" + r.Host)
-	}
 }
 
 func loadSession(w http.ResponseWriter, r *http.Request) (session *sessions.Session, err error) {

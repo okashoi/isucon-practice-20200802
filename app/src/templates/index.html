@@ -9,7 +9,7 @@
 <ul id="memos">
 {{ range .Memos }}
 <li>
-  <a href="{{ url_for "/memo/" }}{{ .Id }}">{{ first_line .Content }}</a> by {{ .Username }} ({{ .CreatedAt }})
+  <a href="http://52.199.202.14/memo/{{ .Id }}">{{ first_line .Content }}</a> by {{ .Username }} ({{ .CreatedAt }})
 </li>
 {{ end }}
 </ul>
