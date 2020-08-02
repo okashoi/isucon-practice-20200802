@@ -237,7 +237,7 @@ func topHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	rows.Close()
 
-	rows, err = dbConn.Query("SELECT memos.*, users.username FROM memos USE INDEX (memos_idx_is_private_created_at) JOIN users ON memos.user = users.id WHERE is_private=0 ORDER BY created_at DESC, memos.id DESC LIMIT ?", memosPerPage)
+	rows, err = dbConn.Query("SELECT memos.*, users.username FROM memos JOIN users ON memos.user = users.id JOIN (SELECT id FROM memos WHERE is_private=0 ORDER BY created_at DESC LIMIT ?) AS tmp ON tmp.id = memos.id", memosPerPage)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -291,7 +291,7 @@ func recentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	rows.Close()
 
-	rows, err = dbConn.Query("SELECT memos.*, users.username FROM memos USE INDEX (memos_idx_is_private_created_at) JOIN users ON memos.user = users.id WHERE is_private=0 ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?", memosPerPage, memosPerPage*page)
+	rows, err = dbConn.Query("SELECT memos.*, users.username FROM memos JOIN users ON memos.user = users.id JOIN (SELECT id FROM memos WHERE is_private=0 ORDER BY created_at DESC LIMIT ? OFFSET ?) AS tmp ON tmp.id = memos.id", memosPerPage, memosPerPage*page)
 	if err != nil {
 		serverError(w, err)
 		return
