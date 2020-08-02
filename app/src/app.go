@@ -208,7 +208,7 @@ func topHandler(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	prepareHandler(w, r)
+
 	dbConn := <-dbConnPool
 	defer func() {
 		dbConnPool <- dbConn
@@ -266,7 +266,7 @@ func recentHandler(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	prepareHandler(w, r)
+
 	dbConn := <-dbConnPool
 	defer func() {
 		dbConnPool <- dbConn
@@ -329,7 +329,7 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	prepareHandler(w, r)
+
 	dbConn := <-dbConnPool
 	defer func() {
 		dbConnPool <- dbConn
@@ -352,7 +352,7 @@ func signinPostHandler(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	prepareHandler(w, r)
+
 	dbConn := <-dbConnPool
 	defer func() {
 		dbConnPool <- dbConn
@@ -404,7 +404,7 @@ func signoutHandler(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	prepareHandler(w, r)
+
 	if antiCSRF(w, r, session) {
 		return
 	}
@@ -419,7 +419,7 @@ func mypageHandler(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	prepareHandler(w, r)
+
 	dbConn := <-dbConnPool
 	defer func() {
 		dbConnPool <- dbConn
@@ -457,7 +457,7 @@ func memoHandler(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	prepareHandler(w, r)
+
 	vars := mux.Vars(r)
 	memoId := vars["memo_id"]
 	dbConn := <-dbConnPool
@@ -544,7 +544,7 @@ func memoPostHandler(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	prepareHandler(w, r)
+
 	if antiCSRF(w, r, session) {
 		return
 	}
