@@ -6,12 +6,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
-	"os/exec"
 	"runtime"
 	"strconv"
 	"strings"
@@ -20,6 +20,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
+	"github.com/russross/blackfriday/v2"
 )
 
 const (
@@ -90,19 +91,12 @@ var (
 			return session.Values["token"]
 		},
 		"gen_markdown": func(s string) template.HTML {
-			f, _ := ioutil.TempFile(tmpDir, "isucon")
-			defer f.Close()
-			f.WriteString(s)
-			f.Sync()
-			finfo, _ := f.Stat()
-			path := tmpDir + finfo.Name()
-			defer os.Remove(path)
-			cmd := exec.Command(markdownCommand, path)
-			out, err := cmd.Output()
-			if err != nil {
-				log.Printf("can't exec markdown command: %v", err)
-				return ""
-			}
+			var r io.Reader
+			r = strings.NewReader(s)
+			buffer, _ := ioutil.ReadAll(r)
+
+			out := blackfriday.Run(buffer)
+
 			return template.HTML(out)
 		},
 	}
