@@ -291,7 +291,7 @@ func recentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	rows.Close()
 
-	rows, err = dbConn.Query("SELECT memos.*, users.username FROM memos JOIN users ON memos.user = users.id JOIN (SELECT id, memo as memo_id FROM public_memos WHERE id BETWEEN ? AND ? ORDER BY id) AS tmp ON tmp.memo_id = memos.id", memosPerPage*page, memosPerPage*(page+1))
+	rows, err = dbConn.Query("SELECT memos.*, users.username FROM memos JOIN users ON memos.user = users.id JOIN (SELECT id, memo as memo_id FROM public_memos WHERE id BETWEEN ? AND ? ORDER BY id DESC) AS tmp ON tmp.memo_id = memos.id", memosPerPage*page, memosPerPage*(page+1))
 	if err != nil {
 		serverError(w, err)
 		return
