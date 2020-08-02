@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 	"net/url"
 	"os"
 	"runtime"
@@ -104,6 +105,10 @@ var (
 )
 
 func main() {
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
+
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	env := os.Getenv("ISUCON_ENV")
