@@ -30,5 +30,7 @@ services:
             MYSQL_DATABASE: "isucon"
             MYSQL_USER: "isucon"
             MYSQL_PASSWORD: "isucon"
+        ports:
+            - "33060:3306"
         volumes:
           - "$PWD/docker-files/init.sql.gz:/docker-entrypoint-initdb.d/init.sql.gz"
