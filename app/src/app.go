@@ -227,7 +227,7 @@ func topHandler(w http.ResponseWriter, r *http.Request) {
 	user := getUser(w, r, dbConn, session)
 
 	var totalCount int
-	rows, err := dbConn.Query("SELECT count(*) AS c FROM memos WHERE is_private=0")
+	rows, err := dbConn.Query("SELECT count(*) AS c FROM public_memos")
 	if err != nil {
 		serverError(w, err)
 		return
@@ -237,7 +237,7 @@ func topHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	rows.Close()
 
-	rows, err = dbConn.Query("SELECT memos.*, users.username FROM memos JOIN users ON memos.user = users.id JOIN (SELECT id FROM memos WHERE is_private=0 ORDER BY created_at DESC LIMIT ?) AS tmp ON tmp.id = memos.id", memosPerPage)
+	rows, err = dbConn.Query("SELECT memos.*, users.username FROM memos JOIN users ON memos.user = users.id JOIN (SELECT id, memo as memo_id FROM public_memos WHERE id <= ? ORDER BY id DESC) AS tmp ON tmp.memo_id = memos.id", memosPerPage)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -280,7 +280,7 @@ func recentHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	page, _ := strconv.Atoi(vars["page"])
 
-	rows, err := dbConn.Query("SELECT count(*) AS c FROM memos WHERE is_private=0")
+	rows, err := dbConn.Query("SELECT count(*) AS c FROM public_memos")
 	if err != nil {
 		serverError(w, err)
 		return
@@ -291,7 +291,7 @@ func recentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	rows.Close()
 
-	rows, err = dbConn.Query("SELECT memos.*, users.username FROM memos JOIN users ON memos.user = users.id JOIN (SELECT id FROM memos WHERE is_private=0 ORDER BY created_at DESC LIMIT ? OFFSET ?) AS tmp ON tmp.id = memos.id", memosPerPage, memosPerPage*page)
+	rows, err = dbConn.Query("SELECT memos.*, users.username FROM memos JOIN users ON memos.user = users.id JOIN (SELECT id, memo as memo_id FROM public_memos WHERE id BETWEEN ? AND ? ORDER BY id) AS tmp ON tmp.memo_id = memos.id", memosPerPage*page, memosPerPage*(page+1))
 	if err != nil {
 		serverError(w, err)
 		return
@@ -573,5 +573,8 @@ func memoPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	newId, _ := result.LastInsertId()
+	if isPrivate == 0 {
+		_, _ = dbConn.Exec("INSERT INTO public_memos (memo) VALUES (?)", newId)
+	}
 	http.Redirect(w, r, fmt.Sprintf("/memo/%d", newId), http.StatusFound)
 }

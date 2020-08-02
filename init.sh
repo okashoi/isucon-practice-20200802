@@ -17,5 +17,5 @@ CREATE TABLE public_memos (
   memo int(11) DEFAULT NULL,
   PRIMARY KEY (id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-INSERT INTO public_memos (memo) SELECT id FROM memos WHERE is_private=0;
+INSERT INTO public_memos (memo) SELECT id FROM memos WHERE is_private=0 ORDER BY created_at, id;
 EOF
