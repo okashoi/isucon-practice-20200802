@@ -172,7 +172,7 @@ func prepareHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func loadSession(w http.ResponseWriter, r *http.Request) (session *sessions.Session, err error) {
-	store := sessions.NewFilesystemStore("/dev/shm/session", []byte(sessionSecret))
+	store := sessions.NewFilesystemStore("/tmp", []byte(sessionSecret))
 	return store.Get(r, sessionName)
 }
 
